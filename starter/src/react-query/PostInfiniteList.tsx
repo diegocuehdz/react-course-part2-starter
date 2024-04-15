@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useInfinitePosts, usePosts } from "./hooks/usePosts";
+import { useInfinitePosts } from "./hooks/useInfinitePosts";
+
 import React from "react";
 
 const PostInfiniteList = () => {
