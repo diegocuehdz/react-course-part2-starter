@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useInfinitePosts } from "./hooks/useInfinitePosts";
 
 import React from "react";
