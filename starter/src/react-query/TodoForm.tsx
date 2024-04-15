@@ -2,45 +2,24 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { Todo } from "./hooks/useTodos";
 import axios from "axios";
+import { useAddTodo } from "./hooks/useAddTodo";
 
 const TodoForm = () => {
-  const queryClient = useQueryClient();
-
-  const addTodo = useMutation<Todo, Error, Todo>({
-    mutationFn: (todo: Todo) => {
-      return axios
-        .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
-        .then((res) => res.data);
-    },
-    onSuccess: (savedTodo, newTodo) => {
-      // Approach: invalidate the cache, it will bring everything again
-      /*queryClient.invalidateQueries({
-        queryKey: ["todos"],
-      });*/
-
-      //Approach 2: updating the data in the cache
-      queryClient.setQueryData<Todo[]>(["todos"], (todos) => [
-        savedTodo,
-        ...(todos || []),
-      ]);
-      if (ref.current) ref.current.value = "";
-    },
-    mutationKey: ["todos"],
+  const { error, isLoading, mutate } = useAddTodo(() => {
+    if (ref.current) ref.current.value = "";
   });
 
   const ref = useRef<HTMLInputElement>(null);
 
   return (
     <>
-      {addTodo.error && (
-        <div className="alert alert-danger">{addTodo.error.message}</div>
-      )}
+      {error && <div className="alert alert-danger">{error.message}</div>}
       <form
         className="row mb-3"
         onSubmit={(event) => {
           event.preventDefault();
           if (ref.current && ref.current.value)
-            addTodo.mutate({
+            mutate({
               completed: false,
               id: 0,
               title: ref.current?.value,
@@ -52,8 +31,8 @@ const TodoForm = () => {
           <input ref={ref} type="text" className="form-control" />
         </div>
         <div className="col">
-          <button className="btn btn-primary" disabled={addTodo.isLoading}>
-            {addTodo.isLoading ? "Adding..." : "Add"}
+          <button className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? "Adding..." : "Add"}
           </button>
         </div>
       </form>

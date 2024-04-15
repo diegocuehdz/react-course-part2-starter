@@ -16,6 +16,6 @@ export const useTodos = () => {
 
   return useQuery<Todo[], Error>({
     queryFn: fetchTodos,
-    queryKey: ["todos"],
+    queryKey: [CACHE_KEY_TODOS],
   });
 };
