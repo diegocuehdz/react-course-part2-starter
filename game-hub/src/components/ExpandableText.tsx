@@ -2,8 +2,8 @@ import { Button, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 interface IExpandableTextProps {
-  children: string;
-  limit: number;
+  children?: string;
+  limit?: number;
 }
 
 export const ExpandableText = ({
